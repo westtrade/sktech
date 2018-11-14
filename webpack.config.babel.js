@@ -28,5 +28,6 @@ const config = {
 }
 
 export default (mode) => {
+    config.mode = mode
     return config
 }

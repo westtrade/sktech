@@ -1,0 +1,7 @@
+export const START_PAGE_LOADING = 'start page loading'
+export const STOP_PAGE_LOADING = 'stop page loading'
+export const SET_POSTS_LIST = 'update page info'
+export const CREATE_POST = 'create post'
+export const UPDATE_POST = 'update post'
+export const DELETE_POST = 'delete post'
+export const LIKE_POST = 'like post'
