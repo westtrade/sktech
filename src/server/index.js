@@ -28,7 +28,7 @@ server.on('upgrade', (req, socket, head) => {
     socket.destroy()
 })
 
-const PORT = isHeroku() ? 80 : 3000
+const PORT = isHeroku ? 80 : 3000
 
 server.listen(PORT, () =>
     console.log(`Server runned at: http://localhost:${PORT}/`)
