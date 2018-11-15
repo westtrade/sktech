@@ -10,7 +10,7 @@ import App from './components/App'
 store.dispatch(mainActions.refresh())
 
 const protocol = location.protocol.replace('http', 'ws')
-const ws = new WebSocket(`${protocol}://${location.host}/ws`)
+const ws = new WebSocket(`${protocol}//${location.host}/ws`)
 
 ws.addEventListener('message', () => {
 	const data = JSON.parse(event.data)
