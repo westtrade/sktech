@@ -18,15 +18,21 @@ if (devTools) {
     middlewares.push(devTools)
 }
 
+
+const preloadedState = global.__PRELOADED_STATE__ || {}
+delete global.__PRELOADED_STATE__
+
+console.log(preloadedState);
+
+
 const store = createStore(
     combineReducers({
         ...mainReducers
     }),
+    preloadedState,
     compose(
         ...middlewares
     )
 )
-
-
 
 export default store

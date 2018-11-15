@@ -1,10 +1,22 @@
 import assert from 'assert'
+import {
+    makeID,
+    unique
+} from '../libs'
+
+import ws from './ws'
+import {
+    ADD_POST,
+    UPDATE_POST
+} from '../client/store/types';
 
 /**
  * @typedef Post
  * @param {String} id Post id
  * @param {Stirng} text Post content
  * @param {Array[string]} likes Likes counter
+ * @param {Number} createdAt Created timestamp
+ * @param {Number} updatedAt Created timestamp
  */
 
 
@@ -12,11 +24,6 @@ import assert from 'assert'
  * @param {Array<Post>} list - Array of posts
  */
 export let list = []
-
-/**
- * Post id generator
- */
-const makeID = () => '_' + Math.random().toString(36).substr(2, 9);
 
 /**
  * Create post with content
@@ -28,10 +35,17 @@ export const create = (text) => {
     const post = {
         id: makeID(),
         text,
-        likes: 0
+        likes: [],
+        createdAt: Date.now(),
+        updatedAt: Date.now()
     }
 
-    list.push(post)
+    ws.broadcast({
+        type: ADD_POST,
+        post,
+    })
+
+    list = [post, ...list]
     return post
 }
 
@@ -39,21 +53,23 @@ export const create = (text) => {
  * Get post by id
  * @param {String} id Post id
  */
-export const get = (id) => list.find(_ => _.id === id)
+export const get = (id) => {
+    return list.find(_ => _.id === id)
+}
 
 /**
  * Remove post by id
  * @param {String} id Post id
  */
-export const remove = (id) => (list = list.filter(_ => _.id !== id) && true)
+export const remove = id => {
+    const post = get(id)
+    if (!post) {
+        return
+    }
 
-/**
- * Filter unique items
- * @param {Any} val Current value
- * @param {Number} idx Element index
- * @param {Array<any>} arr Array of items
- */
-const unqiue = (val, idx, arr) => arr.indexOf(val) === idx
+    list = list.filter(_ => _.id !== id)
+    return true
+}
 
 /**
  * 
@@ -62,9 +78,8 @@ const unqiue = (val, idx, arr) => arr.indexOf(val) === idx
  */
 export const edit = (id, {
     text,
-    likes = []
+    likes
 } = {}) => {
-
     if (typeof text === 'string') {
         assert(text.length >= 1, `text: Text can't be empty`)
     }
@@ -72,22 +87,34 @@ export const edit = (id, {
     list = list.reduce((result, item) => {
 
         if (item.id === id) {
-            likes = likes.filter(unqiue)
+            if (likes) {
+                likes = likes.filter(unique)
+            }
 
             item = {
-                text,
-                likes,
-                ...item
+                ...item,
+                text: text || item.text,
+                likes: likes || item.likes,
+                updatedAt: Date.now(),
             }
+
+            ws.broadcast({
+                type: UPDATE_POST,
+                post: item,
+            })
         }
 
         return [...result, item]
     }, [])
 
-    return find(id)
+    return get(id)
 }
 
-
+/**
+ * Like/Dislike post
+ * @param {String} id Post id
+ * @param {String} client Client id
+ */
 export const like = (id, client) => {
     const post = get(id)
     if (!post) {

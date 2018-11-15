@@ -3,9 +3,10 @@ import path from 'path'
 import HTMLPlugin from 'html-webpack-plugin'
 
 const config = {
-    entry: ['./src/client/entry.js'],
+    entry: ['./src/client/entry'],
     output: {
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '/',
     },
     module: {
         rules: [{
@@ -21,9 +22,25 @@ const config = {
     },
 
     plugins: [
-        new HTMLPlugin()
-    ]
+        new HTMLPlugin({
+            template: path.resolve(__dirname, './src/client/index.html')
+        })
+    ],
 
+    devServer: {
+        proxy: {
+            '/posts': 'http://localhost:3000',
+            '/ws': {
+                target: 'http://localhost:3000',
+                ws: true,
+            }
+        },
+        historyApiFallback: true
+    },
+
+    resolve: {
+        extensions: ['.js', '.jsx', '.json']
+    }
 
 }
 
