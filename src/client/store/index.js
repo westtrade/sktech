@@ -22,9 +22,6 @@ if (devTools) {
 const preloadedState = global.__PRELOADED_STATE__ || {}
 delete global.__PRELOADED_STATE__
 
-console.log(preloadedState);
-
-
 const store = createStore(
     combineReducers({
         ...mainReducers

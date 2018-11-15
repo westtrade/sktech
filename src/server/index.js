@@ -5,6 +5,7 @@ import http from 'http'
 import ws from './ws'
 import url from 'url'
 import path from 'path'
+import isHeroku from 'is-heroku'
 
 const app = express()
 
@@ -27,7 +28,8 @@ server.on('upgrade', (req, socket, head) => {
     socket.destroy()
 })
 
+const PORT = isHeroku() ? 80 : 3000
 
-server.listen(3000, () =>
-    console.log(`Server runned at: http://localhost:3000/`)
+server.listen(PORT, () =>
+    console.log(`Server runned at: http://localhost:${PORT}/`)
 )

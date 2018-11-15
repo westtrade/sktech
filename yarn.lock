@@ -2810,6 +2810,11 @@ is-glob@^4.0.0:
   dependencies:
     is-extglob "^2.1.1"
 
+is-heroku@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/is-heroku/-/is-heroku-2.0.0.tgz#6482d1e861435103ae9f69e66f9bd28eb4ea0bca"
+  integrity sha512-c4vHXwxwfIZlKOEAyk25XICIfKlqWwYct+2zt1IQfpn2qt6SNqTp41QabAUN5B9JJMj6WQ7prN4HeM2KUF/gKw==
+
 is-number@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/is-number/-/is-number-3.0.0.tgz#24fd6201a4782cf50561c810276afc7d12d71195"
@@ -2987,11 +2992,6 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
   integrity sha512-s5kLOcnH0XqDO+FvuaLX8DDjZ18CGFk7VygH40QoKPUQhW4e2rvM0rwUq0t8IQDOwYSeLK01U90OjzBTme2QqA==
-
-ky@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/ky/-/ky-0.5.1.tgz#83947ea74955654100565ad19b525fcb129b472b"
-  integrity sha512-1ZGATX+y8kQIMg8jzTQFboqN6XUSdYTtJbVK8h8mXy1HTp04iq78plsDoKkHPnAb1lnaN5P7TDZ95aMB+Mr1zA==
 
 lcid@^2.0.0:
   version "2.0.0"
