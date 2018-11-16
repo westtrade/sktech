@@ -24,7 +24,11 @@ const config = {
     plugins: [
         new HTMLPlugin({
             template: path.resolve(__dirname, './src/client/index.html')
+        }),
+        new webpack.DefinePlugin({
+            'process.env.BROWSER': 'true',
         })
+
     ],
 
     devServer: {

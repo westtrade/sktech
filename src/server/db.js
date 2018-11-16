@@ -10,6 +10,9 @@ import {
     UPDATE_POST
 } from '../client/store/types';
 
+import * as api from '../libs/api'
+
+
 /**
  * @typedef Post
  * @param {String} id Post id
@@ -28,17 +31,23 @@ export let list = []
 /**
  * Create post with content
  */
-export const create = (text) => {
+export const create = async (text) => {
     assert(typeof text === 'string', `text: Text field must be a string`)
     assert(text.length >= 1, `text: Text can't be empty`)
 
+    const postData = await api.createPost(text)
     const post = {
-        id: makeID(),
-        text,
-        likes: [],
-        createdAt: Date.now(),
-        updatedAt: Date.now()
+        ...postData,
+        likes: []
     }
+
+    // {
+    //     id: makeID(),
+    //     text,
+    //     likes: [],
+    //     createdAt: Date.now(),
+    //     updatedAt: Date.now()
+    // }
 
     ws.broadcast({
         type: ADD_POST,
@@ -49,12 +58,33 @@ export const create = (text) => {
     return post
 }
 
+
+
+
+export const synchronize = async () => {
+    const serverData = await api.list()
+    list = serverData.map((item) =>
+        ({
+            ...item,
+            likes: get(item.id, {
+                likes: []
+            }).likes
+        })
+    )
+
+    return list
+}
+
+
+
+
+
 /**
  * Get post by id
  * @param {String} id Post id
  */
-export const get = (id) => {
-    return list.find(_ => _.id === id)
+export const get = (id, defaultvalue) => {
+    return list.find(_ => _.id == id) || defaultvalue
 }
 
 /**
@@ -67,7 +97,7 @@ export const remove = id => {
         return
     }
 
-    list = list.filter(_ => _.id !== id)
+    list = list.filter(_ => _.id != id)
     return true
 }
 
@@ -86,7 +116,7 @@ export const edit = (id, {
 
     list = list.reduce((result, item) => {
 
-        if (item.id === id) {
+        if (item.id == id) {
             if (likes) {
                 likes = likes.filter(unique)
             }

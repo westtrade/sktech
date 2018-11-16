@@ -1,4 +1,4 @@
-import * as api from '../../api'
+import * as api from '../../../libs/api'
 
 import {
     TOGGLE_PAGE_LOADING,
@@ -117,9 +117,15 @@ export const viewPost = (post = null) => ({
     post
 })
 
-export const fetchPost = id => async dispatch => {
+export const fetchPost = id => async (dispatch, getState) => {
+    const {
+        post
+    } = getState()
     dispatch(loading(true))
-    dispatch(viewPost(null))
+
+    if (!post || post.id != id) {
+        dispatch(viewPost(null))
+    }
 
     try {
         const post = await api.getPost(id)

@@ -1,5 +1,6 @@
 import express from 'express'
 import * as db from './db'
+import * as api from '../libs/api'
 import signale from 'signale'
 import fs from 'fs'
 import path from 'path'
@@ -34,6 +35,7 @@ const spaController = (req, res, next) => {
 
         let state = req.state || {}
 
+
         state = {
             ...state,
             posts: [
@@ -48,8 +50,10 @@ const spaController = (req, res, next) => {
             state,
         )
 
+        const context = {}
+
         const app = ReactDOMServer.renderToString(
-            <StaticRouter location={req.url}>
+            <StaticRouter location={req.url} context={context}>
                 <App store={store}/>
             </StaticRouter>
         );
@@ -67,14 +71,16 @@ const spaController = (req, res, next) => {
     })
 }
 
-
 router.get('/', spaController)
+
 router.get('/post/:id', (req, res, next) => {
     req.state = {
         post: db.get(req.params.id)
     }
+
     next()
-},spaController)
+}, spaController)
+
 
 
 router.post('/posts/:id/like', (req, res, next) => {
@@ -86,8 +92,8 @@ router.post('/posts/:id/like', (req, res, next) => {
     res.json(result)
 })
 
-router.post('/posts', (req, res) => {
-    const result = db.create(req.body.text)
+router.post('/posts', async (req, res) => {
+    const result = await db.create(req.body.text)
     return res.json(result)
 })
 

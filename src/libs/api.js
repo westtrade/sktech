@@ -1,11 +1,11 @@
-// import ky from 'ky'
 import fetch from 'cross-fetch';
+import FormData from 'form-data'
 
-
+const API_ENDPOINT = process.env.BROWSER ? '' : 'http://142.93.102.228'
 
 import {
     makeID
-} from '../libs/index';
+} from './index';
 
 const CLIENT_ID = global.localStorage && localStorage.getItem('CLIENT_ID') || makeID()
 if (global.localStorage) {
@@ -13,34 +13,37 @@ if (global.localStorage) {
 }
 
 export const list = () => {
-    return fetch('/posts').then(resp => resp.json())
+    return fetch(`${API_ENDPOINT}/posts`).then(resp => resp.json())
 }
 
 export const createPost = (text) => {
-    return fetch('/posts', {
-        method: 'POST',
-        body: JSON.stringify({
-            text
-        }),
-        headers: {
-            'content-type': 'application/json'
-        }
-    }).then(resp => resp.json())
+    return fetch(`${API_ENDPOINT}/posts/`, {
+            method: 'POST',
+            body: JSON.stringify({
+                text
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(r => r.json())
 }
 
 export const editPost = (id, data) => {
-    return fetch(`/posts/${id}`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'content-type': 'application/json'
-        }
+    if (process.env.BROWSER) {
+        return fetch(`${API_ENDPOINT}/posts/${id}`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'content-type': 'application/json'
+            }
 
-    }).then(resp => resp.json())
+        }).then(resp => resp.json())
+    }
 }
 
 export const getPost = id => {
-    return fetch(`/posts/${id}`).then(resp => resp.json())
+    return fetch(`${API_ENDPOINT}/posts/${id}`).then(resp => resp.json())
 }
 
 export const like = id => {
